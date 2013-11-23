@@ -42,6 +42,9 @@
     <Compile Include="GeneticAlgorithm.cs" />
     <Compile Include="GeneticAlgorithmOperations.cs" />
     <Compile Include="GeneticAlgorithmParameters.cs" />
+    <Compile Include="GeneticAlgorithmProgressUpdateArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="OperationAppliers\ParallelOperationApplier.cs" />
     <Compile Include="OperationAppliers\IOperationApplier.cs" />
     <Compile Include="OperationAppliers\SerialOperationApplier.cs" />

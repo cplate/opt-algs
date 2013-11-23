@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OptimizationAlgorithms.GeneticAlgorithm.Models;
 using OptimizationAlgorithms.GeneticAlgorithm.OperationAppliers;
@@ -256,5 +257,63 @@ namespace OptimizationAlgorithms.GeneticAlgorithm.Tests
             _ops.CandidateFactory.VerifyAllExpectations();
             Assert.AreEqual(2, _numCallbacksCalled);
         }
+
+        [TestMethod]
+        public void GetBestCandidateAsync_PerformsOperationsProperly()
+        {
+            _parms.MaxIterations = 1;
+            _parms.PopulationSize = 5;
+            _parms.SurvivalPercentage = 0.4;
+            _parms.NewBloodPercentage = 0;
+
+            var evaluatedCandidates = new List<EvaluatedCandidate<Candidate>>
+                       {
+                           new EvaluatedCandidate<Candidate>() { Score = 10, Candidate = new Candidate { Num1 = 10 }}, new EvaluatedCandidate<Candidate>(),
+                           new EvaluatedCandidate<Candidate>(), new EvaluatedCandidate<Candidate>(),
+                           new EvaluatedCandidate<Candidate>()
+                       };
+            var naturalSelectionResults = new List<Candidate>
+                {
+                    new Candidate(), new Candidate()
+                };
+            var crossoverResults = new List<Candidate>
+                {
+                    new Candidate(), new Candidate(), new Candidate()
+                };
+            var candidatesForEvaluation = new List<Candidate>
+                {
+                    new Candidate(), new Candidate(), new Candidate(), new Candidate(), new Candidate()
+                };
+
+            _ops.CandidateEvaluator = MockRepository.GenerateStub<ICandidateEvaluator<Candidate>>();
+            _ops.CandidateEvaluator.Expect(x => x.Sort(evaluatedCandidates)).Return(evaluatedCandidates).Repeat.Times(2);
+            _ops.CandidateEvaluator.Expect(x => x.IsBetterThan(null, null)).IgnoreArguments().Return(false);
+            _ops.CandidateFactory = MockRepository.GenerateStub<ICandidateFactory<Candidate>>();
+            _ops.CandidateFactory.Expect(x => x.GeneratePool(4)).Return(candidatesForEvaluation.Take(4).ToList());
+            _ops.CrossoverOperation = MockRepository.GenerateStub<ICrossoverOperation<Candidate>>();
+            _ops.MutationOperation = MockRepository.GenerateStub<IMutationOperation<Candidate>>();
+            _ops.NaturalSelectionOperation = MockRepository.GenerateStub<INaturalSelectionOperation<Candidate>>();
+            
+            var applier = MockRepository.GenerateStub<IOperationApplier<Candidate>>();
+            applier.Expect(x => x.EvaluateCandidates(null, null)).IgnoreArguments().Constraints(
+                List.ContainsAll(candidatesForEvaluation), Is.Equal(_ops.CandidateEvaluator)).Return(evaluatedCandidates).Repeat.Times(2);
+            applier.Expect(x => x.PerformNaturalSelection(evaluatedCandidates, _ops.NaturalSelectionOperation, 2))
+                   .Return(naturalSelectionResults);
+            applier.Expect(x => x.PerformCrossover(naturalSelectionResults, _ops.CrossoverOperation, 3)).Return(crossoverResults);
+            applier.Expect(x => x.PerformMutation(null, null, 0)).IgnoreArguments().Constraints(
+                List.ContainsAll(naturalSelectionResults) && List.ContainsAll(crossoverResults),
+                Is.Equal(_ops.MutationOperation), Is.Equal(_parms.MutationPercentage))
+                   .Return(candidatesForEvaluation);
+
+            _target = new GeneticAlgorithm<Candidate>(_parms, _ops, applier);
+            var cancelSource = new CancellationTokenSource();
+            var resultTask = _target.GetBestCandidateAsync(candidatesForEvaluation.Skip(4).Take(1).First(), cancelSource.Token);
+            resultTask.Wait();
+
+            applier.VerifyAllExpectations();
+            _ops.CandidateFactory.VerifyAllExpectations();
+            Assert.AreEqual(10, resultTask.Result.Num1);
+        }
+
     }
 }

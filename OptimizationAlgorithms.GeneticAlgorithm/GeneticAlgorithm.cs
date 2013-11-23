@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using OptimizationAlgorithms.GeneticAlgorithm.Models;
 using OptimizationAlgorithms.GeneticAlgorithm.OperationAppliers;
 
@@ -8,7 +9,9 @@ namespace OptimizationAlgorithms.GeneticAlgorithm
     {
         // Provide callback for when the solution is improved
         public delegate void SolutionImprovedEventHandler(object sender, SolutionImprovedArgs<TCandidate> args);
+        public delegate void ProgressUpdateEventHandler(object sender, GeneticAlgorithmProgressUpdateArgs args);
         public event SolutionImprovedEventHandler SolutionImproved;
+        public event ProgressUpdateEventHandler ProgressUpdated;
 
         public GeneticAlgorithmParameters Parameters { get; set; }
         public GeneticAlgorithmOperations<TCandidate> Operations { get; set; }
@@ -37,10 +40,23 @@ namespace OptimizationAlgorithms.GeneticAlgorithm
             Applier = applier;
         }
 
-        // Run the algorithm to find the best candidate solution, optionally
-        // providing an initial candidate as a starting point
+        public Task<TCandidate> GetBestCandidateAsync(TCandidate initialCandidate, CancellationToken token)
+        {
+            return Task<TCandidate>.Factory.StartNew(() => GetBestCandidate(initialCandidate, token), token);
+        }
+
         public TCandidate GetBestCandidate(TCandidate initialCandidate)
         {
+            return GetBestCandidate(initialCandidate, CancellationToken.None);
+        }
+
+        // Run the algorithm to find the best candidate solution, optionally
+        // providing an initial candidate as a starting point
+        public TCandidate GetBestCandidate(TCandidate initialCandidate, CancellationToken token)
+        {
+            if (token.IsCancellationRequested)
+                return initialCandidate;
+
             // Kick things off by generating an initial pool of candidates and evaluating them
             var candidates = Operations.CandidateFactory.GeneratePool(Parameters.PopulationSize - 1);
             candidates.Add(initialCandidate ?? Operations.CandidateFactory.GenerateOne());
@@ -55,6 +71,17 @@ namespace OptimizationAlgorithms.GeneticAlgorithm
             // Iterate to improve upon the current solution
             for (int i = 0; i < Parameters.MaxIterations; i++)
             {
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                if (i % 5 == 0)
+                {
+                    if (ProgressUpdated != null)
+                        ProgressUpdated(this, new GeneticAlgorithmProgressUpdateArgs { IterationsBeingPerformed = Parameters.MaxIterations, IterationsProcessed = i });
+                }
+
                 // Do natural selection to trim down the population to the "best"
                 candidates = Applier.PerformNaturalSelection(evaluatedCandidates, Operations.NaturalSelectionOperation, (int)(Parameters.SurvivalPercentage * evaluatedCandidates.Count));
 

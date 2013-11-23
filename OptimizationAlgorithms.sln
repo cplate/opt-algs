@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0218C375
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptimizationAlgorithms.GeneticAlgorithm.Demos.SimpleTSP", "OptimizationAlgorithms.GeneticAlgorithm.Demos.SimpleTSP\OptimizationAlgorithms.GeneticAlgorithm.Demos.SimpleTSP.csproj", "{5093B6CB-4E57-43A1-AF15-FF8E2DDB96D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptimizationAlgorithms.GeneticAlgorithm.Demos.SantasRoute", "OptimizationAlgorithms.GeneticAlgorithm.Demos.SantasRoute\OptimizationAlgorithms.GeneticAlgorithm.Demos.SantasRoute.csproj", "{3E07142B-6756-45C0-A76B-BBF952FCA168}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{5093B6CB-4E57-43A1-AF15-FF8E2DDB96D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5093B6CB-4E57-43A1-AF15-FF8E2DDB96D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5093B6CB-4E57-43A1-AF15-FF8E2DDB96D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E07142B-6756-45C0-A76B-BBF952FCA168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E07142B-6756-45C0-A76B-BBF952FCA168}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E07142B-6756-45C0-A76B-BBF952FCA168}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E07142B-6756-45C0-A76B-BBF952FCA168}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,5 +42,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{AA3A5FF6-DAAB-45E2-BDD2-358B95FBF581} = {0218C375-85E8-4A31-BBF4-8796ED7B5ED9}
 		{5093B6CB-4E57-43A1-AF15-FF8E2DDB96D6} = {4464FE2C-DA59-478E-B008-0425A4912D05}
+		{3E07142B-6756-45C0-A76B-BBF952FCA168} = {4464FE2C-DA59-478E-B008-0425A4912D05}
 	EndGlobalSection
 EndGlobal

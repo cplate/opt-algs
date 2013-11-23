@@ -1,0 +1,122 @@
+﻿body {
+    font-size: .85em;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    color: #232323;
+    background-color: #fff;
+	margin: 10px;
+    padding: 0;
+}
+header, footer, nav, section {
+    display: block;
+}
+#page {
+    margin: 0 auto;
+    max-width: 900px;
+	min-width: 300px;
+}
+button {
+    -moz-user-select: none;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 4px 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857;
+    padding: 6px 12px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    background-color: #428BCA;
+    border-color: #357EBD;
+    color: #FFFFFF !important;
+}
+button[disabled] {
+    opacity: 0.5;
+    cursor: auto;
+}
+ol {
+    margin: 0 0 40px 0;
+}
+ol li.col1 {
+    margin-left: 0;
+}
+ol li.col2 {
+    margin-left: 15em;
+}
+ol li.col3 {
+    margin-left: 30em;
+}
+ol li {
+    line-height: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+}
+ol li.reset {
+    margin-top: -272px;
+}
+h1 {
+    font-size: 200%;
+    color: red;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+h2 {
+    font-size: 150%;
+    font-weight: bold;
+    display: inline-block;
+    margin: 10px 0;
+}
+#locations {
+    margin: 10px 0;
+    font-size: 125%;
+}
+.locationOption {
+    display: inline-block;
+    margin-right: 15px;
+}
+.locationOption input {
+    margin-right: 5px;
+}
+#actions {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+#actions button {
+    margin: 0 10px 0 0;
+    vertical-align: middle;
+}
+#message {
+    font-size: 150%;
+    font-weight: bold;
+    color: green;
+    display: inline-block;
+    vertical-align: middle;
+}    
+.metric .caption {
+    font-weight: bold;
+    margin-right: 10px;
+}
+.metric .units {
+    margin-left: 5px;
+}
+#routeList {
+    font-size: 14px;
+}
+
+@media screen and (max-width: 650px) {
+	ol li.col1 {
+		margin-left: inherit;
+	}
+	ol li.col2 {
+		margin-left: inherit;
+	}
+	ol li.col3 {
+		margin-left: inherit;
+	}
+	ol li.reset {
+		margin-top: inherit;
+	}
+}
+

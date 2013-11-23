@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Santa's Route";
+}
+<script src="http://open.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js?key=YOUR_KEY_GOES_HERE"></script>
+
+<div id="page">
+    <h1>Help Santa!</h1>
+    <div id="instructions">Santa needs some help in planning his route to visit all of the good little girls and boys on Christmas Eve.  You can help him out by planning out either the US capital cities or major world cities, so all he has to do is fill in the gaps once he completes his list.</div>
+    <div id="locations">
+        <div class="locationOption"><input type="radio" name="locationGroup" value="US" data-bind="checked: selectedLocationGroup, click: locationGroupChanged"/>US Cities</div>
+        <div class="locationOption"><input type="radio" name="locationGroup" value="World" data-bind="checked: selectedLocationGroup, click: locationGroupChanged"/>World Cities</div>
+    </div>
+    <div id="actions">
+        <button data-bind="click: route, disable: isRouting">Start Routing</button>
+        <button data-bind="click: cancelRouting, enable: isRouting">Route Looks Good Enough</button>
+        <div id="message" data-bind="text: message"></div>
+    </div>
+    <div id="routeInfo">
+        <h2>Route Map</h2>
+        <div id="map" style="width: 900px; height: 500px"></div>
+        <h2>Route Metrics</h2>
+        <div class="metric"><label class="caption">Distance:</label><label data-bind="text: miles"></label><label class="units">Miles</label></div>
+        <h2>Route Sequence</h2>
+        <ol id="routeList" data-bind="foreach: currentRoute">
+            <li data-bind="css: { col1: $index() < 17, col2: $index() >= 17 && $index() < 34, col3: $index() >= 34, reset: $index() == 17 || $index() == 34 }">
+                <span data-bind="text: Name"></span>
+            </li> 
+        </ol>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            var vm = new SantasRoute.RoutingViewModel();
+            ko.applyBindings(vm);
+            vm.resizeMap();
+
+            window.onresize = function() {
+                vm.resizeMap();
+            };
+        });
+    </script>
+}
